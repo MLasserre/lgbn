@@ -98,59 +98,6 @@ for v in variables:
 prediction = test.apply(prediction, args=(cfs, variables), axis=1)
 test['Prediction'] = prediction
 
-# d, t = os.path.split(tfn)
-# if not os.path.isdir(os.path.join(d, "comparaison")):
-    # print("ok")
-    # os.mkdir(os.path.join(d,"comparaison"))
-# print("file_name_comparaison", os.path.join(d, "comparaison", t))
-# test[["P_res_tp1", "Prediction"]].to_csv(os.path.join(d, "comparaison", t),
-                                         # index=True,
-                                         # date_format='%d/%m/%Y %H:%M:%S')
-
-
-#s = tfn.split('/')
-#h = '/'.join(s[:-2])
-#t = s[-1]
-#if not os.path.isdir(os.path.join(h, 'test_inferenced_T_ext')):
-#    os.mkdir(os.path.join(h, 'test_inferenced_T_ext'))
-#nfn = os.path.join(h, 'test_inferenced_T_ext', t)
-#test.to_csv(nfn, index=True)
-
-# Calcul des statistiques
-fit = 100 * (1 - np.linalg.norm(test['Prediction'] - test['P_res_tp1'], ord=2)/
-               np.linalg.norm(test['P_res_tp1'] - test['P_res_tp1'].mean(), ord=2))
-#erm = 100 * np.linalg.norm(test['Pred'] - test['P_res'], ord=1) / \
-            #(test['P_res'].max() - test['P_res'].min()) / len(test['P_res'])
-eam = np.linalg.norm(test['Prediction'] - test['P_res_tp1'], ord=1)
-
-# Création de la table
-header = ['\"Base\"', '\"$\\mu_P$\"', '\"$\\sigma_P$\"', '\"$M_{\\Delta}$\"',
-          '\"$S_{\\Delta}$\"',
-          '\"$M_{|\\Delta|}$\"', '\"$\\frac{M_{|\\Delta|}}{\\mu_P} (\\%)$\"',
-          '\"FIT (\\%)\"', '\"R2\"']
-header = ' '.join(header)
-row = []
-base_name = tfn.split('/')[-1]
-base_name = '_'.join(base_name.split('_')[-2:])
-base_name = base_name.replace('.csv', '')
-base_name = '$\\mathrm{' + base_name + '}$'
-base_name = base_name.replace('_', '-')
-
-row.append(base_name)
-
-row.append(test['P_res_tp1'].mean())
-row.append(test['P_res_tp1'].std())
-row.append((test['Prediction'] - test['P_res_tp1']).mean())
-row.append((test['Prediction'] - test['P_res_tp1']).std())
-row.append(metrics.mean_absolute_error(test['P_res_tp1'], test['Prediction']))
-row.append(eam/len(test['P_res_tp1'])/test['P_res_tp1'].mean()*100)
-row.append(fit)
-row.append(metrics.r2_score(test['P_res_tp1'], test['Prediction']))
-row[1:] = [round(r,2) for r in row[1:]]
-row = [str(r) for r in row]
-row = ' '.join(row)
-
-
 test.to_csv(tfn, index=True, date_format='%d/%m/%Y %H:%M:%S')
 
 # Ecriture de la table
@@ -161,5 +108,3 @@ if not Path(ofn).exists():
 
 with open(ofn, 'a') as o:
     o.write(row +'\n')
-
-
