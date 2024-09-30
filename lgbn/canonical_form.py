@@ -79,6 +79,7 @@ class CanonicalForm:
                 j += 1
                 
         M = np.array(M)
+        print("M", M)
         
         invSigma = inv(Sigma)
         K = np.dot(np.dot(M, invSigma), np.transpose(M))

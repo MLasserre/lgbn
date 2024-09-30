@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import sys
-sys.path.insert(0, "/home/marvin/git_repos/usingOtagrum/sum2019/")
+sys.path.append("..")
 
 import numpy as np
-import canonical_form as cf
-import continuous_variable as cv
+from lgbn.canonical_form import CanonicalForm
+from lgbn.continuous_variable import ContinuousVariable
 import openturns as ot
 
 # Building a structure :
